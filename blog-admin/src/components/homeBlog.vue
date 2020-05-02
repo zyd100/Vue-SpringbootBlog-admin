@@ -5,22 +5,28 @@
 				<el-menu-item index="1">后台管理</el-menu-item>
 				<el-submenu index="2">
 					<template slot="title">个人中心</template>
-					<el-menu-item index="2-1"><router-link to="/userinfo">个人资料</router-link></el-menu-item>
+					<el-menu-item index="2-1">
+						<router-link to="/userinfo">个人资料</router-link>
+					</el-menu-item>
 					<el-menu-item index="2-2">我的博客</el-menu-item>
 					<el-menu-item index="2-3">我的标签</el-menu-item>
 				</el-submenu>
 				<el-submenu index="3">
 					<template slot="title">管理博客</template>
 					<el-menu-item index="3-1">文章管理</el-menu-item>
-					<el-menu-item index="3-2">评论管理</el-menu-item>
-					<el-menu-item index="3-3">分类专栏</el-menu-item>
+					<el-menu-item index="3-2"><router-link to="/markdown">Markdown编辑器</router-link></el-menu-item>
+					<el-menu-item index="3-3">评论管理</el-menu-item>
+					<el-menu-item index="3-4">分类专栏</el-menu-item>
 				</el-submenu>
+
 			</el-menu>
 			<div class="line"></div>
 		</el-header>
 		<el-container>
 			<el-container>
-				<el-main><router-view></router-view></el-main>
+				<el-main>
+					<router-view></router-view>
+				</el-main>
 			</el-container>
 		</el-container>
 	</el-container>
@@ -48,18 +54,8 @@
 		text-align: center;
 		line-height: 160px;
 	}
-
-	ody>.el-container {
+	body>.el-container {
 		margin-bottom: 40px;
-	}
-
-	.el-container:nth-child(5) .el-aside,
-	.el-container:nth-child(6) .el-aside {
-		line-height: 260px;
-	}
-
-	.el-container:nth-child(7) .el-aside {
-		line-height: 320px;
 	}
 </style>
 <script>
@@ -67,7 +63,7 @@
 		name: "HomeBlog",
 		data() {
 			return {
-				
+
 			};
 		},
 		created() {

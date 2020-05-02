@@ -2,6 +2,7 @@ import VueRouter from 'vue-router'
 import Home from '../components/homeBlog'
 import UserInfo from '../views/UserInfo/index'
 import Login from '../views/Login/index'
+import Markdown from '../views/Markdown/index'
 var router = new VueRouter({
     routes: [
        
@@ -11,6 +12,10 @@ var router = new VueRouter({
 			{
 				path:'/userinfo',
 				component:UserInfo
+			},
+			{
+				path:'/markdown',
+				component:Markdown
 			}
 		]
 		},
