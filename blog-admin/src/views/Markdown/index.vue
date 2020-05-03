@@ -1,5 +1,8 @@
 <template>
 	   <div>
+		   <el-row>
+			   <el-col></el-col>
+		   </el-row>
 		     <el-input placeholder="标题" v-model="article.title" >
 		       <template slot="prepend">标题</template>
 		     </el-input>
@@ -84,6 +87,7 @@
 			if(typeof store.state.id == "undefined" || store.state.id == null || store.state.id == ""){
 			        this.$router.push("/login")
 			    }	
+				
 			let article=JSON.parse(Cookies.get("ArticleMarkdown"))
 	    	this.$data.article=article
 			this.$data.article.userId=store.state.id

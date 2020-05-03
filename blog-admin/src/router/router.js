@@ -3,6 +3,8 @@ import Home from '../components/homeBlog'
 import UserInfo from '../views/UserInfo/index'
 import Login from '../views/Login/index'
 import Markdown from '../views/Markdown/index'
+import Article from '../views/Article/index'
+import ArticleDetail from '../views/Article/detail'
 var router = new VueRouter({
     routes: [
        
@@ -10,12 +12,20 @@ var router = new VueRouter({
 		component: Home,
 		children:[
 			{
-				path:'/userinfo',
+				path:'userinfo',
 				component:UserInfo
 			},
 			{
-				path:'/markdown',
+				path:'markdown',
 				component:Markdown
+			},
+			{
+				path:'article',
+				component:Article
+			},
+			{
+				path:'article/detail/:id',
+				component:ArticleDetail
 			}
 		]
 		},

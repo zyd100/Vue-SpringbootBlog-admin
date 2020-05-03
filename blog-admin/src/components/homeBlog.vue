@@ -5,16 +5,16 @@
 				<el-menu-item index="1">后台管理</el-menu-item>
 				<el-submenu index="2">
 					<template slot="title">个人中心</template>
-					<el-menu-item index="2-1">
-						<router-link to="/userinfo">个人资料</router-link>
+					<el-menu-item index="2-1" @click="routerPush('userinfo')">
+						个人资料
 					</el-menu-item>
 					<el-menu-item index="2-2">我的博客</el-menu-item>
 					<el-menu-item index="2-3">我的标签</el-menu-item>
 				</el-submenu>
 				<el-submenu index="3">
 					<template slot="title">管理博客</template>
-					<el-menu-item index="3-1">文章管理</el-menu-item>
-					<el-menu-item index="3-2"><router-link to="/markdown">Markdown编辑器</router-link></el-menu-item>
+					<el-menu-item index="3-1" @click="routerPush('article')">文章管理</el-menu-item>
+					<el-menu-item index="3-2" @click="routerPush('markdown')">Markdown编辑器</el-menu-item>
 					<el-menu-item index="3-3">评论管理</el-menu-item>
 					<el-menu-item index="3-4">分类专栏</el-menu-item>
 				</el-submenu>
@@ -69,6 +69,10 @@
 		created() {
 
 		},
-		methods: {}
+		methods: {
+			routerPush(path){
+				this.$router.push(path)
+			}
+		}
 	};
 </script>

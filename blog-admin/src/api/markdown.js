@@ -12,3 +12,14 @@ export function submitArticle(data){
 					       }
 				})
 }
+export function updateArticle(data){
+	let url='http://localhost:8080/articles'
+	return axios({
+					method:'put',
+					data:data,
+					url:url,
+					headers: {
+					           'Authorization': "Bearer "+Cookies.get('Authorization')
+					       }
+				})
+}
