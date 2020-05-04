@@ -1,13 +1,24 @@
 <template>
 	<div>	 
+	<el-page-header content="" @back='returnBack'>
+	</el-page-header>
 			   <el-row>
-				   <el-col :span="2"><el-button type="text" @click='returnBack'>返回</el-button></el-col>
-				   <el-col :span="6"> <el-input placeholder="标题" v-model="article.title" >
+				   <el-col :span="2"></el-col>
+				   <el-col :span="4"> <el-input placeholder="标题" v-model="article.title" >
 			       <template slot="prepend">标题</template>
 			     </el-input></el-col>
-				 <el-col :span="6"> <el-input placeholder="作者" v-model="article.author" >
+				 <el-col :span="4"> <el-input placeholder="作者" v-model="article.author" >
 				   <template slot="prepend">作者</template>
 				 </el-input></el-col>
+				 <el-col :span="4">
+				 				<template>
+				 				  <el-radio-group v-model="article.type">
+				 				    <el-radio :label="1">草稿</el-radio>
+				 				    <el-radio :label="2">文章</el-radio>
+				 				    
+				 				  </el-radio-group>
+				 				</template>
+				 </el-col>
 			   </el-row>
 			    
 				
@@ -38,7 +49,9 @@
 					author:'',
 					summary:'',
 					userId:'',
-					}
+					type:'2',
+					id:''
+					},	
 			}
 		},
 		methods:{
@@ -56,7 +69,7 @@
 				})
 			},
 			returnBack(){
-				this.$router.push('/article')
+				this.$router.push(store.state.preRouter)
 			}
 		},
 		created(){

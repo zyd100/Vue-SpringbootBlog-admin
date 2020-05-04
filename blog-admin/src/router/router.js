@@ -5,6 +5,7 @@ import Login from '../views/Login/index'
 import Markdown from '../views/Markdown/index'
 import Article from '../views/Article/index'
 import ArticleDetail from '../views/Article/detail'
+import Draft from '../views/Draft/index'
 var router = new VueRouter({
     routes: [
        
@@ -26,6 +27,10 @@ var router = new VueRouter({
 			{
 				path:'article/detail/:id',
 				component:ArticleDetail
+			},
+			{
+				path:'draft',
+				component:Draft
 			}
 		]
 		},

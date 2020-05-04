@@ -2,8 +2,12 @@ export var store = {
     debug: true,
     state: {   /*需要管理的状态*/
         count: 0,
-        id: ''
+        id: '',
+		preRouter:''
     },
+	setNewPreRouter(newVal){
+		this.state.preRouter=newVal
+	},
     setNewCount(newVal) {   /*修改状态的方法*/
         this.state.count = newVal;
     },

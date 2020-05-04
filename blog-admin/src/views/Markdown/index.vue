@@ -1,14 +1,19 @@
 <template>
 	   <div>
 		   <el-row>
-			   <el-col></el-col>
-		   </el-row>
-		     <el-input placeholder="标题" v-model="article.title" >
+			   <el-col :span="4"> <el-input placeholder="标题" v-model="article.title" >
 		       <template slot="prepend">标题</template>
-		     </el-input>
-			 <el-input placeholder="作者" v-model="article.author" >
+		     </el-input></el-col>
+			   <el-col :span="4"><el-input placeholder="作者" v-model="article.author" >
 			   <template slot="prepend">作者</template>
-			 </el-input>
+			 </el-input></el-col>
+			 <el-col :span="4">
+				 <template>
+				   <el-radio v-model="article.type" label=1>草稿</el-radio>
+				   <el-radio v-model="article.type" label=2>文章</el-radio>
+				 </template>
+			 </el-col>
+		   </el-row>
 	        <mavon-editor 
 	            v-model="article.content" 
 	            ref="md" 
@@ -40,6 +45,7 @@
 					author:'',
 					summary:'',
 					userId:'',
+					type:1
 				}	
 	        }
 	    },
@@ -51,6 +57,7 @@
 	        },
 	        // 提交
 	        submit(){
+				this.$data.article.userId=store.state.id
 				submitArticle(this.$data.article).then(response=>{
 					let result=response.data
 					if(result.code === 200){
