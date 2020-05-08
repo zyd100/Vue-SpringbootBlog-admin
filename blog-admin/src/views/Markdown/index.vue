@@ -1,104 +1,148 @@
 <template>
-	   <div>
-		   <el-row>
-			   <el-col :span="4"> <el-input placeholder="标题" v-model="article.title" >
-		       <template slot="prepend">标题</template>
-		     </el-input></el-col>
-			   <el-col :span="4"><el-input placeholder="作者" v-model="article.author" >
-			   <template slot="prepend">作者</template>
-			 </el-input></el-col>
-			 <el-col :span="4">
-				 <template>
-				   <el-radio v-model="article.type" label=1>草稿</el-radio>
-				   <el-radio v-model="article.type" label=2>文章</el-radio>
-				 </template>
-			 </el-col>
-		   </el-row>
-	        <mavon-editor 
-	            v-model="article.content" 
-	            ref="md" 
-	            @change="change" 
-				@save="save"
-	            style="min-height: 600px"
-	        />
-			<el-button type="info" plain @click="submit">提交</el-button>
-	    </div>
+	<div>
+		<el-row>
+			<el-col :span="4">
+				<el-input placeholder="标题" v-model="article.title">
+					<template slot="prepend">标题</template>
+				</el-input>
+			</el-col>
+			<el-col :span="4">
+				<el-input placeholder="作者" v-model="article.author">
+					<template slot="prepend">作者</template>
+				</el-input>
+			</el-col>
+			<el-col :span="4">
+				<template>
+					<el-radio v-model="article.type" label=1>草稿</el-radio>
+					<el-radio v-model="article.type" label=2>文章</el-radio>
+				</template>
+			</el-col>
+		</el-row>
+		<mavon-editor v-model="article.content" ref="md" @change="change" @save="save" @imgAdd="$imgAdd" @imgDel="$imgDel" style="min-height: 600px" />
+		<el-button type="info" plain @click="submit">提交</el-button>
+	</div>
 </template>
 <script>
-	import { mavonEditor } from 'mavon-editor'
+	import {
+		mavonEditor
+	} from 'mavon-editor'
 	import 'mavon-editor/dist/css/index.css'
 	import Cookies from 'js-cookie'
-	import {submitArticle} from '../../api/markdown.js'
-	import {store} from '../../store/store.js'
+	import {
+		submitArticle,
+		addImage,
+		getImgUrl,
+		deleteImg
+	} from '../../api/markdown.js'
+	import {
+		store
+	} from '../../store/store.js'
 	export default {
-		name:'Markdown',
-	    // 注册
-	    components: {
-	        mavonEditor,
-	    },
-	    data() {
-	        return {
-	            html:'',// 及时转的html
-				article:{
-					content:'',
-					title:'',
-					author:'',
-					summary:'',
-					userId:'',
-					type:1
-				}	
-	        }
-	    },
-	    methods: {
-	        // 所有操作都会被解析重新渲染
-	        change(value, render){
-	            // render 为 markdown 解析后的结果[html]
-	            this.html = render;
-	        },
-	        // 提交
-	        submit(){
-				this.$data.article.userId=store.state.id
-				submitArticle(this.$data.article).then(response=>{
-					let result=response.data
-					if(result.code === 200){
+		name: 'Markdown',
+		// 注册
+		components: {
+			mavonEditor,
+		},
+		data() {
+			return {
+				html: '', // 及时转的html
+				article: {
+					content: '',
+					title: '',
+					author: '',
+					summary: '',
+					userId: '',
+					type: 1
+				}
+			}
+		},
+		methods: {
+			// 所有操作都会被解析重新渲染
+			change(value, render) {
+				// render 为 markdown 解析后的结果[html]
+				this.html = render;
+			},
+			// 提交
+			submit() {
+				console.log(this.$data.article)
+				this.$data.article.userId = store.state.id
+				submitArticle(this.$data.article).then(response => {
+					let result = response.data
+					if (result.code === 200) {
 						this.$notify({
-						         title: '成功',
-						         message: '上传文章成功',
-						         type: 'success'
-						       });
+							title: '成功',
+							message: '上传文章成功',
+							type: 'success'
+						});
 						Cookies.remove("ArticleMarkdown")
+					} else {
+						this.$notify.error({
+							title: '错误',
+							message: result.message
+						});
+					}
+				}).catch(error => {
+					this.$notify.error({
+						title: '错误',
+						message: error
+					});
+				})
+
+			},
+			save(markdown, html) {
+				Cookies.set("ArticleMarkdown", this.$data.article)
+				this.$notify({
+					title: '成功',
+					message: '暂时保存文章成功',
+					type: 'success'
+				});
+			},
+			$imgAdd(pos, $file) {
+				// 将图片上传到服务器.
+				var formdata = new FormData();
+				formdata.append('file', $file);
+				addImage(formdata).then(response=>{
+					let result=response.data
+					let imgPath=getImgUrl(result.data.objectName)
+					this.$refs.md.$img2Url(pos,imgPath)
+					this.$notify({
+						title: '成功',
+						message: '上传图片成功',
+						type: 'success'
+					});
+				}).catch(error=>{
+					
+				})
+			},
+			$imgDel(pos){
+				deleteImg(pos[0]).then(response=>{
+					if(response.data.code===200){
+						this.$notify({
+							title: '成功',
+							message: '删除图片成功',
+							type: 'success'
+						});
 					}else{
 						this.$notify.error({
-						         title: '错误',
-						         message: result.message
-						       });
+							title: '错误',
+							message: response.data.message
+						});
 					}
+					
 				}).catch(error=>{
-					 this.$notify.error({
-					          title: '错误',
-					          message: error
-					        });
+					
 				})
-				
-	        },
-			save(markdown, html){
-				Cookies.set("ArticleMarkdown",this.$data.article)
-				 this.$notify({
-				          title: '成功',
-				          message: '暂时保存文章成功',
-				          type: 'success'
-				        });
 			}
-	    },
-	    created() {
-			if(typeof store.state.id == "undefined" || store.state.id == null || store.state.id == ""){
-			        this.$router.push("/login")
-			    }	
-				
-			let article=JSON.parse(Cookies.get("ArticleMarkdown"))
-	    	this.$data.article=article
-			this.$data.article.userId=store.state.id
-	    }
+		},
+		created() {
+			if (typeof store.state.id == "undefined" || store.state.id == null || store.state.id == "") {
+				this.$router.push("/login")
+			}
+
+			let article = JSON.parse(Cookies.get("ArticleMarkdown"))
+			this.$data.article = article
+			this.$data.article.userId = store.state.id
+		}
 	}
 </script>
 

@@ -63,7 +63,7 @@
 				search: '',
 				total: 11,
 				pageNum: 10,
-				pageSize: 10
+				pageSize: 10,
 			}
 		},
 		methods: {
