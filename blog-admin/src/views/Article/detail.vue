@@ -26,6 +26,8 @@
 	         v-model="article.content" 
 	         ref="md" 
 	         @change="change" 
+			 @imgAdd="$imgAdd"
+			 @imgDel="$imgDel"
 	         style="min-height: 600px"
 	     />
 				<el-button type="info" plain @click="submit">更新文章</el-button>
@@ -38,7 +40,9 @@
 	import Cookies from 'js-cookie'
 	import {store} from '../../store/store.js'
 	import {getArticleDetail} from '../../api/article.js'
-	import {updateArticle} from '../../api/markdown.js'
+	import {updateArticle,addImage,
+		getImgUrl,
+		deleteImg} from '../../api/markdown.js'
 	export default{
 		data(){
 			return {
@@ -70,6 +74,50 @@
 			},
 			returnBack(){
 				this.$router.push(store.state.preRouter)
+			},
+			$imgAdd(pos, $file) {
+				// 将图片上传到服务器.
+				var formdata = new FormData();
+				formdata.append('file', $file);
+				addImage(formdata).then(response=>{
+					let result=response.data
+					if(response.data.code===200){
+						let imgPath=getImgUrl(result.data.objectName)
+						this.$refs.md.$img2Url(pos,imgPath)
+						this.$notify({
+							title: '成功',
+							message: '上传图片成功',
+							type: 'success'
+						});
+					}else{
+						this.$notify.error({
+							title: '错误',
+							message: response.data.message
+						});
+					}
+					
+				}).catch(error=>{
+					
+				})
+			},
+			$imgDel(pos){
+				deleteImg(pos[0]).then(response=>{
+					if(response.data.code===200){
+						this.$notify({
+							title: '成功',
+							message: '删除图片成功',
+							type: 'success'
+						});
+					}else{
+						this.$notify.error({
+							title: '错误',
+							message: response.data.message
+						});
+					}
+					
+				}).catch(error=>{
+					
+				})
 			}
 		},
 		created(){
