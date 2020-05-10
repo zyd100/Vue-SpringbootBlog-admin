@@ -6,6 +6,7 @@ import Markdown from '../views/Markdown/index'
 import Article from '../views/Article/index'
 import ArticleDetail from '../views/Article/detail'
 import Draft from '../views/Draft/index'
+import Comments from '../views/Comments/index'
 var router = new VueRouter({
     routes: [
        
@@ -31,6 +32,10 @@ var router = new VueRouter({
 			{
 				path:'draft',
 				component:Draft
+			},
+			{
+				path:'comment',
+				component:Comments
 			}
 		]
 		},

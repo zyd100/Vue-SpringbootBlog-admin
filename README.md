@@ -4,6 +4,10 @@
 
 [SpringBoot个人博客系统](https://github.com/zyd100/SpringBootBlog)
 
+## 2020年5月10日
+
+新增评论管理功能
+
 ## 2020年5月9日
 
 编辑文章页面现也支持图片上传功能

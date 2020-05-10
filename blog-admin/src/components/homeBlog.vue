@@ -16,7 +16,7 @@
 					<el-menu-item index="3-1" @click="routerPush('article')">文章管理</el-menu-item>
 					<el-menu-item index="3-2" @click="routerPush('markdown')">Markdown编辑器</el-menu-item>
 					<el-menu-item index="3-3" @click="routerPush('draft')">草稿箱</el-menu-item>
-					<el-menu-item index="3-4">评论管理</el-menu-item>
+					<el-menu-item index="3-4" @click="routerPush('comment')">评论管理</el-menu-item>
 					<el-menu-item index="3-5">分类专栏</el-menu-item>
 				</el-submenu>
 
