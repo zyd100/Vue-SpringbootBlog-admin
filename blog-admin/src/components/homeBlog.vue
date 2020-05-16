@@ -9,7 +9,7 @@
 						个人资料
 					</el-menu-item>
 					<el-menu-item index="2-2">我的博客</el-menu-item>
-					<el-menu-item index="2-3">我的标签</el-menu-item>
+					<el-menu-item index="2-3" @click="routerPush('category')">我的标签</el-menu-item>
 				</el-submenu>
 				<el-submenu index="3">
 					<template slot="title">管理博客</template>

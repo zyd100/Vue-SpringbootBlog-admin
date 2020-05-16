@@ -7,6 +7,7 @@ import Article from '../views/Article/index'
 import ArticleDetail from '../views/Article/detail'
 import Draft from '../views/Draft/index'
 import Comments from '../views/Comments/index'
+import Category from '../views/Category/index'
 var router = new VueRouter({
     routes: [
        
@@ -36,16 +37,16 @@ var router = new VueRouter({
 			{
 				path:'comment',
 				component:Comments
+			},
+			{
+				path:'category',
+				component:Category
 			}
 		]
 		},
 		{
 			path:'/login',
 			component:Login
-		},
-		{
-			path:'',
-			component:UserInfo
 		}
     ],
 	scrollBehavior: () => ({ y: 0 })
