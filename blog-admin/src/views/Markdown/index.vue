@@ -19,10 +19,23 @@
 			</el-col>
 		</el-row>
 		<mavon-editor v-model="article.content" ref="md" @change="change" @save="save" @imgAdd="$imgAdd" @imgDel="$imgDel" style="min-height: 600px" />
+		<el-row>
+			<el-col :span="6">
+				  <el-select v-model="articleCategory" filterable multiple placeholder="请选择文章标签">
+				    <el-option
+				      v-for="item in category"
+				      :key="item.id"
+				      :label="item.name"
+				      :value="item.id">
+				    </el-option>
+				  </el-select>
+			</el-col>
+		</el-row>
 		<el-button type="info" plain @click="submit">提交</el-button>
 	</div>
 </template>
 <script>
+	import {insertCategoryToNewArticle} from '../../api/articleCategory.js'
 	import {
 		mavonEditor
 	} from 'mavon-editor'
@@ -34,6 +47,9 @@
 		getImgUrl,
 		deleteImg
 	} from '../../api/markdown.js'
+	import {
+		getAllCategories,
+	} from '../../api/category.js'
 	import {
 		store
 	} from '../../store/store.js'
@@ -47,13 +63,16 @@
 			return {
 				html: '', // 及时转的html
 				article: {
+					id:'',
 					content: '',
 					title: '',
 					author: '',
 					summary: '',
 					userId: '',
 					type: 1
-				}
+				},
+				articleCategory:[],
+				category:[]
 			}
 		},
 		methods: {
@@ -64,16 +83,22 @@
 			},
 			// 提交
 			submit() {
-				console.log(this.$data.article)
+				
 				this.$data.article.userId = store.state.id
 				submitArticle(this.$data.article).then(response => {
 					let result = response.data
 					if (result.code === 200) {
-						this.$notify({
-							title: '成功',
-							message: '上传文章成功',
-							type: 'success'
-						});
+						
+						this.$data.article=result.data
+						insertCategoryToNewArticle(result.data.id,this.$data.articleCategory).then(response=>{
+							if(response.data.code===200){
+								this.$notify({
+									title: '成功',
+									message: '上传文章成功',
+									type: 'success'
+								});
+							}
+						})
 						Cookies.remove("ArticleMarkdown")
 					} else {
 						this.$notify.error({
@@ -132,13 +157,21 @@
 				}).catch(error=>{
 					
 				})
+			},
+			initCategory(){
+				getAllCategories().then(response=>{
+					let result=response.data
+					if(result.code===200){
+						this.$data.category=result.data
+					}
+				})
 			}
 		},
 		created() {
 			if (typeof store.state.id == "undefined" || store.state.id == null || store.state.id == "") {
 				this.$router.push("/login")
 			}
-
+			this.initCategory()
 			let article = JSON.parse(Cookies.get("ArticleMarkdown"))
 			this.$data.article = article
 			this.$data.article.userId = store.state.id

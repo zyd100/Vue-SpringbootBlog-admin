@@ -30,7 +30,19 @@
 			 @imgDel="$imgDel"
 	         style="min-height: 600px"
 	     />
-				<el-button type="info" plain @click="submit">更新文章</el-button>
+		 <el-row>
+		 	<el-col :span="6">
+		 		  <el-select v-model="articleCategory" filterable multiple placeholder="请选择文章标签">
+		 		    <el-option
+		 		      v-for="item in category"
+		 		      :key="item.id"
+		 		      :label="item.name"
+		 		      :value="item.id">
+		 		    </el-option>
+		 		  </el-select>
+		 	</el-col>
+		 </el-row>
+		<el-button type="info" plain @click="submit">更新文章</el-button>
 	 </div>
 </template>
 
@@ -43,6 +55,10 @@
 	import {updateArticle,addImage,
 		getImgUrl,
 		deleteImg} from '../../api/markdown.js'
+	import {
+		getAllCategories,
+	} from '../../api/category.js'	
+	import {overrideCategoryToArticle} from '../../api/articleCategory.js'
 	export default{
 		data(){
 			return {
@@ -56,9 +72,24 @@
 					type:'2',
 					id:''
 					},	
+					articleCategory:[],
+					category:[]
 			}
 		},
 		methods:{
+			initCategory(){
+				getAllCategories().then(response=>{
+					let result=response.data
+					if(result.code===200){
+						this.$data.category=result.data
+					}
+				})
+			},
+			initArticleCategory(articleCategories){
+				for(var i=0,len=articleCategories.length;i<len;++i){
+					this.$data.articleCategory.push(articleCategories[i].category.id)
+				}
+			},
 			change(value, render){
 			    // render 为 markdown 解析后的结果[html]
 			    this.html = render;
@@ -66,7 +97,16 @@
 			submit(){
 				updateArticle(this.$data.article).then(response=>{
 					if(response.data.code ===200){
-						console.log('success')
+						overrideCategoryToArticle(this.$data.article.id,this.$data.articleCategory)
+							.then(response=>{
+								if(response.data.code===200){
+									this.$notify({
+										title: '成功',
+										message: '更新文章成功',
+										type: 'success'
+									});
+								}
+							})
 					}
 				}).catch(error=>{
 					console.log(error)
@@ -121,10 +161,11 @@
 			}
 		},
 		created(){
+			this.initCategory()
 			getArticleDetail(this.$route.params.id).then(response=>{
 				let result=response.data
 				this.$data.article=result.data.article
-				console.log(this.$data.article)
+				this.initArticleCategory(result.data.articleCategories)
 			}).catch(error=>{
 				console.log(error)
 			})

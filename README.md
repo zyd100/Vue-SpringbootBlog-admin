@@ -4,6 +4,10 @@
 
 [SpringBoot个人博客系统](https://github.com/zyd100/SpringBootBlog)
 
+## 2020年5月17日
+
+新增文章标签功能
+
 ## 2020年5月16日
 
 后台管理新增'我的标签'管理功能
